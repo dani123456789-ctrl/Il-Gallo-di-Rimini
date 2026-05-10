@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiche - Il Gallo di Rimini</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #fdf2f8; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .chart-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #E91E63; }
+        .back-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #E91E63; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Torna alla Home</a>
+        <h1>Analisi Prestazioni 📊</h1>
+        
+        <div class="grid">
+            <div class="chart-card">
+                <h3>Voto Complessivo</h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Puntualità</h3>
+                <canvas id="punctualityChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Capacità di "Successo"</h3>
+                <canvas id="successChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Esempio dati (Andrebbero caricati dal database/Google Sheet)
+        const setupChart = (id, type, labels, data, color) => {
+            new Chart(document.getElementById(id), {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: color, borderWidth: 0 }]
+                },
+                options: { plugins: { legend: { display: type === 'pie' } } }
+            });
+        };
+
+        setupChart('performanceChart', 'bar', ['Scarso', 'Ok', 'Buono', 'Top'], [1, 4, 15, 8], '#E91E63');
+        setupChart('punctualityChart', 'pie', ['Anticipo', 'Puntuale', 'Ritardo'], [5, 12, 3], ['#4CAF50', '#2196F3', '#FFC107']);
+        setupChart('successChart', 'doughnut', ['Successo', 'Vicino', 'Nulla'], [20, 5, 2], ['#E91E63', '#F48FB1', '#FCE4EC']);
+    </script>
+</body>
+</html>
