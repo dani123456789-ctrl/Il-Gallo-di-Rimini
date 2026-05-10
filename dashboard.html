@@ -2,71 +2,132 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Il Gallo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Risultati - Il Gallo di Rimini</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; background: #fdf2f8; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .chart-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: #E91E63; }
-        .btn-reset { margin-top: 50px; display: block; width: 200px; margin-left: auto; margin-right: auto; padding: 10px; color: #ccc; background: none; border: 1px solid #eee; border-radius: 10px; cursor: pointer; }
+        body { font-family: -apple-system, sans-serif; background: #fdf2f8; padding: 20px; color: #1A1A2E; }
+        .container { max-width: 1100px; margin: auto; }
+        h1 { text-align: center; color: #E91E63; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .chart-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #FFCDD2; }
+        .chart-card h3 { color: #C2185B; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #FCE4EC; padding-bottom: 10px; }
+        
+        .comments-section { margin-top: 40px; }
+        .comment-box { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid #E91E63; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .comment-tag { font-size: 11px; font-weight: bold; color: #E91E63; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        
+        .nav-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #E91E63; font-weight: bold; }
+        canvas { max-height: 250px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📊 Statistiche Gallo v2</h1>
-        <p id="info" style="text-align: center; color: #666;"></p>
 
-        <div class="grid">
-            <div class="chart-card"><h3>Puntualità</h3><canvas id="cPun"></canvas></div>
-            <div class="chart-card"><h3>Orgasmi Partner</h3><canvas id="cOrg"></canvas></div>
-            <div class="chart-card"><h3>Voto Tecnico</h3><canvas id="cVoto"></canvas></div>
-            <div class="chart-card"><h3>Un altro appuntamento?</h3><canvas id="cBis"></canvas></div>
+<div class="container">
+    <a href="index.html" class="nav-link">← Torna alla Home</a>
+    <h1>📊 Report "Il Gallo di Rimini"</h1>
+    <p id="stats-info" class="subtitle">Analisi dei feedback ricevuti</p>
+
+    <div class="grid" id="charts-grid">
         </div>
 
-        <button class="btn-reset" onclick="reset()">Azzerata Totale</button>
+    <div class="comments-section">
+        <h2 style="color: #E91E63; margin-bottom: 20px;">💬 Suggerimenti e Commenti Liberi</h2>
+        <div id="comments-container">
+            </div>
     </div>
+</div>
 
-    <script>
-        function init() {
-            const dati = JSON.parse(localStorage.getItem('gallo_results_v2') || '[]');
-            document.getElementById('info').innerText = `${dati.length} questionari ricevuti`;
+<script>
+    function loadDashboard() {
+        const data = JSON.parse(localStorage.getItem('gallo_results_v2') || '[]');
+        const container = document.getElementById('charts-grid');
+        const commContainer = document.getElementById('comments-container');
+        
+        if (data.length === 0) {
+            document.getElementById('stats-info').innerText = "Nessun dato ancora disponibile. Compila il questionario!";
+            return;
+        }
 
-            if (dati.length === 0) return;
+        document.getElementById('stats-info').innerText = `Basato su ${data.length} risposte anonime`;
 
-            const counts = { puntualita: {}, orgasmo: {}, voto_finale: {}, bis: {} };
-            
-            dati.forEach(r => {
-                ['puntualita', 'orgasmo', 'voto_finale', 'bis'].forEach(key => {
-                    counts[key][r[key]] = (counts[key][r[key]] || 0) + 1;
-                });
+        // Configurazione delle domande per i grafici
+        const config = [
+            { id: 'puntualita', title: 'Puntualità', type: 'pie' },
+            { id: 'ascolto', title: 'Capacità di ascolto', type: 'bar' },
+            { id: 'memoria', title: 'Dettagli Personali', type: 'bar' },
+            { id: 'approccio', title: 'Qualità Approccio', type: 'pie' },
+            { id: 'bis', title: 'Altro appuntamento?', type: 'doughnut' },
+            { id: 'durata', title: 'Durata', type: 'bar' },
+            { id: 'gps', title: 'GPS (Punti giusti)', type: 'bar' },
+            { id: 'preliminari', title: 'Gestione Preliminari', type: 'pie' },
+            { id: 'posizioni', title: 'Originalità Posizioni', type: 'bar' },
+            { id: 'orgasmo', title: 'Capacità Orgasmo', type: 'bar' },
+            { id: 'voto_finale', title: 'Valutazione Performance', type: 'doughnut' }
+        ];
+
+        const colors = ['#E91E63', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0', '#FF5722'];
+
+        config.forEach(q => {
+            // 1. Crea la card per il grafico
+            const card = document.createElement('div');
+            card.className = 'chart-card';
+            card.innerHTML = `<h3>${q.title}</h3><canvas id="chart-${q.id}"></canvas>`;
+            container.appendChild(card);
+
+            // 2. Conta le risposte
+            const counts = {};
+            data.forEach(item => {
+                const val = item[q.id] || "Non risposto";
+                counts[val] = (counts[val] || 0) + 1;
             });
 
-            const draw = (id, type, dataObj, color) => {
-                new Chart(document.getElementById(id), {
-                    type: type,
-                    data: {
-                        labels: Object.keys(dataObj),
-                        datasets: [{ data: Object.values(dataObj), backgroundColor: color }]
-                    },
-                    options: { plugins: { legend: { display: type === 'pie' } } }
-                });
-            };
+            // 3. Genera grafico
+            new Chart(document.getElementById(`chart-${q.id}`), {
+                type: q.type,
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: (q.type !== 'bar') } }
+                }
+            });
+        });
 
-            draw('cPun', 'pie', counts.puntualita, ['#4CAF50', '#2196F3', '#FFC107', '#9E9E9E']);
-            draw('cOrg', 'bar', counts.orgasmo, '#E91E63');
-            draw('cVoto', 'bar', counts.voto_finale, '#C2185B');
-            draw('cBis', 'doughnut', counts.bis, ['#E91E63', '#333', '#eee']);
-        }
+        // Gestione Commenti Liberi
+        const commentKeys = [
+            { key: 'difetto', label: 'Peggior Difetto' },
+            { key: 'forza', label: 'Punto di Forza' },
+            { key: 'sugg_intimo', label: 'Suggerimento Intimo' }
+        ];
 
-        function reset() {
-            if(confirm("Vuoi davvero azzerare tutto?")) {
-                localStorage.removeItem('gallo_results_v2');
-                location.reload();
-            }
+        data.forEach((entry, index) => {
+            commentKeys.forEach(ck => {
+                if (entry[ck.key] && entry[ck.key].trim() !== "") {
+                    const box = document.createElement('div');
+                    box.className = 'comment-box';
+                    box.innerHTML = `<span class="comment-tag">${ck.label} (Feedback #${index + 1})</span>${entry[ck.key]}`;
+                    commContainer.appendChild(box);
+                }
+            });
+        });
+
+        if (commContainer.innerHTML === "") {
+            commContainer.innerHTML = "<p style='color:#999'>Nessun commento scritto finora.</p>";
         }
-        init();
-    </script>
+    }
+
+    window.onload = loadDashboard;
+</script>
+
 </body>
 </html>
