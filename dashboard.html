@@ -9,18 +9,14 @@
         body { font-family: -apple-system, sans-serif; background: #fdf2f8; padding: 20px; color: #1A1A2E; }
         .container { max-width: 1100px; margin: auto; }
         h1 { text-align: center; color: #E91E63; margin-bottom: 30px; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #FFCDD2; margin-bottom: 25px; }
-        .card h3 { color: #C2185B; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #FCE4EC; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Stile per i commenti */
-        .comment-list { max-height: 200px; overflow-y: auto; padding-right: 10px; }
-        .comment-item { background: #FFF8FB; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 14px; border-left: 3px solid #E91E63; color: #444; }
-        .no-data { color: #999; font-style: italic; font-size: 13px; }
-        
-        .nav-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #E91E63; font-weight: bold; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #FFCDD2; margin-bottom: 25px; min-height: 300px; }
+        .card h3 { color: #C2185B; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #FCE4EC; padding-bottom: 10px; text-transform: uppercase; }
+        .comment-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .comment-item { background: #FFF8FB; padding: 12px; border-radius: 10px; font-size: 14px; border-left: 4px solid #E91E63; line-height: 1.4; }
+        .no-data { color: #999; font-style: italic; text-align: center; margin-top: 20px; }
         canvas { max-height: 220px; }
+        .nav-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #E91E63; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -28,37 +24,33 @@
 <div class="container">
     <a href="index.html" class="nav-link">← Torna alla Home</a>
     <h1>📊 Report Integrale "Il Gallo di Rimini"</h1>
-
-    <div class="grid" id="main-grid">
-        </div>
+    <div class="grid" id="main-grid"></div>
 </div>
 
 <script>
-    function loadDashboard() {
+    window.onload = function() {
         const data = JSON.parse(localStorage.getItem('gallo_results_v2') || '[]');
         const grid = document.getElementById('main-grid');
         
         if (data.length === 0) {
-            grid.innerHTML = "<p class='no-data'>In attesa di dati... invia il primo questionario!</p>";
+            grid.innerHTML = "<div class='card'><p class='no-data'>Nessun dato presente. Invia un questionario per vedere i risultati!</p></div>";
             return;
         }
 
-        // 1. CONFIGURAZIONE DOMANDE A SCELTA (GRAFICI)
+        // --- PARTE 1: GRAFICI ---
         const chartConfigs = [
-            { id: 'puntualita', title: 'Puntualità', type: 'pie' },
-            { id: 'ascolto', title: 'Capacità di ascolto', type: 'bar' },
-            { id: 'memoria', title: 'Dettagli Personali', type: 'bar' },
-            { id: 'approccio', title: 'Qualità Approccio', type: 'pie' },
-            { id: 'bis', title: 'Altro appuntamento?', type: 'doughnut' },
-            { id: 'durata', title: 'Durata Performance', type: 'bar' },
-            { id: 'gps', title: 'Capacità GPS', type: 'bar' },
-            { id: 'preliminari', title: 'Gestione Preliminari', type: 'pie' },
-            { id: 'posizioni', title: 'Originalità Posizioni', type: 'bar' },
-            { id: 'orgasmo', title: 'Risultato Finale', type: 'bar' },
-            { id: 'voto_finale', title: 'Valutazione Complessiva', type: 'doughnut' }
+            { id: 'puntualita', title: 'Puntualità' },
+            { id: 'ascolto', title: 'Ascolto' },
+            { id: 'memoria', title: 'Memoria Dettagli' },
+            { id: 'approccio', title: 'Approccio' },
+            { id: 'bis', title: 'Altro Appuntamento' },
+            { id: 'durata', title: 'Durata' },
+            { id: 'gps', title: 'Capacità GPS' },
+            { id: 'preliminari', title: 'Preliminari' },
+            { id: 'posizioni', title: 'Posizioni' },
+            { id: 'orgasmo', title: 'Orgasmo' },
+            { id: 'voto_finale', title: 'Performance Globale' }
         ];
-
-        const colors = ['#E91E63', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0', '#FF5722', '#607D8B'];
 
         chartConfigs.forEach(conf => {
             const card = document.createElement('div');
@@ -73,24 +65,24 @@
             });
 
             new Chart(document.getElementById(`chart-${conf.id}`), {
-                type: conf.type,
+                type: 'bar',
                 data: {
                     labels: Object.keys(counts),
-                    datasets: [{ data: Object.values(counts), backgroundColor: colors }]
+                    datasets: [{ data: Object.values(counts), backgroundColor: '#E91E63' }]
                 },
-                options: {
-                    responsive: true,
+                options: { 
+                    responsive: true, 
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: (conf.type !== 'bar'), position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+                    plugins: { legend: { display: false } } 
                 }
             });
         });
 
-        // 2. CONFIGURAZIONE DOMANDE APERTE (TESTI)
+        // --- PARTE 2: COMMENTI TESTUALI (DIFETTI, PUNTI DI FORZA, SUGGERIMENTI) ---
         const textConfigs = [
-            { id: 'difetto', title: '🆘 Peggiori Difetti Segnalati' },
+            { id: 'difetto', title: '🆘 Peggiori Difetti' },
             { id: 'forza', title: '⭐️ Punti di Forza' },
-            { id: 'sugg_intimo', title: '💄 Suggerimenti Lato Intimo' }
+            { id: 'sugg_intimo', title: '💄 Suggerimenti Intimi' }
         ];
 
         textConfigs.forEach(conf => {
@@ -99,26 +91,24 @@
             
             let html = `<h3>${conf.title}</h3><div class="comment-list">`;
             
+            // Estrae i commenti per questa specifica categoria
             const comments = data
-                .map(item => item[conf.id])
-                .filter(text => text && text.trim() !== "");
+                .map(item => item[conf.id]) 
+                .filter(text => text && text.trim() !== ""); // Esclude i vuoti
 
             if (comments.length > 0) {
                 comments.forEach(text => {
-                    html += `<div class="comment-item">"${text}"</div>`;
+                    html += `<div class="comment-item">${text}</div>`;
                 });
             } else {
-                html += `<div class="no-data">Nessun commento ricevuto.</div>`;
+                html += `<p class="no-data">Ancora nessun commento.</p>`;
             }
 
             html += `</div>`;
             card.innerHTML = html;
             grid.appendChild(card);
         });
-    }
-
-    window.onload = loadDashboard;
+    };
 </script>
-
 </body>
 </html>
