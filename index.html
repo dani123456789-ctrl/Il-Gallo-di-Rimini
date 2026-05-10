@@ -3,26 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Gallo di Rimini - Home</title>
+    <title>Home - Il Gallo di Rimini</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #FFF0F5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 3rem; border-radius: 30px; box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15); text-align: center; max-width: 400px; }
-        h1 { color: #E91E63; font-size: 2.5rem; margin-bottom: 0.5rem; }
-        p { color: #666; margin-bottom: 2rem; }
-        .btn { display: block; padding: 1.2rem; margin: 1rem 0; border-radius: 15px; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .btn-survey { background: #E91E63; color: white; box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3); }
-        .btn-survey:hover { background: #C2185B; transform: translateY(-2px); }
-        .btn-stats { border: 2px solid #E91E63; color: #E91E63; }
-        .btn-stats:hover { background: #FFF0F5; }
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background: #FFF0F5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center;
+        }
+        .container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 30px; 
+            box-shadow: 0 10px 25px rgba(233,30,99,0.1); 
+            max-width: 400px; 
+            width: 90%;
+        }
+        
+        /* STILE DEL LOGO */
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        .logo-img {
+            width: 120px; /* Puoi regolare la grandezza qui */
+            height: 120px;
+            border-radius: 50%; /* Lo rende tondo */
+            object-fit: cover;
+            border: 3px solid #E91E63;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: #E91E63; margin-bottom: 30px; font-size: 24px; }
+        
+        .btn { 
+            display: block; 
+            background: #E91E63; 
+            color: white; 
+            text-decoration: none; 
+            padding: 15px; 
+            border-radius: 15px; 
+            margin-bottom: 15px; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        .btn:hover { background: #C2185B; transform: translateY(-2px); }
+        .btn-secondary { background: #fce4ec; color: #E91E63; border: 1px solid #E91E63; }
+        .btn-secondary:hover { background: #f8bbd0; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div style="font-size: 50px;">🐓</div>
-        <h1>Il Gallo di Rimini</h1>
-        <p>Benvenuta nel portale ufficiale. La tua opinione (anonima) conta.</p>
-        <a href="survey.html" class="btn btn-survey">Inizia il Questionario</a>
-        <a href="dashboard.html" class="btn btn-stats">Vedi Statistiche</a>
+
+<div class="container">
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/dani123456789-ctrl/Il-Gallo-di-Rimini/main/Gallo.png" 
+             alt="Logo Il Gallo di Rimini" 
+             class="logo-img">
     </div>
+
+    <h1>Il Gallo di Rimini</h1>
+    
+    <a href="survey.html" class="btn">Inizia il Questionario</a>
+    <a href="dashboard.html" class="btn btn-secondary">Guarda i Risultati</a>
+</div>
+
 </body>
 </html>
