@@ -3,108 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionario Anonimo - Il Gallo di Rimini</title>
+    <title>Questionario - Il Gallo di Rimini</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background: #FFF0F5; padding: 20px; color: #1A1A2E; }
+        body { font-family: -apple-system, sans-serif; background: #FFF0F5; padding: 20px; color: #1A1A2E; line-height: 1.4; }
         .container { max-width: 600px; margin: 0 auto; }
-        .welcome-card { background: white; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(233, 30, 99, 0.1); }
+        .welcome-card { background: white; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(233,30,99,0.1); }
         .section { background: white; border-radius: 16px; margin-bottom: 20px; border: 1px solid #FFCDD2; overflow: hidden; }
         .section-header { background: #E91E63; padding: 15px; color: white; font-weight: bold; }
+        .instr { padding: 10px 20px; font-size: 12px; color: #666; font-style: italic; background: #FFF8FB; border-bottom: 1px solid #FFCDD2; }
         .question-card { padding: 20px; border-bottom: 1px solid #FFCDD2; }
         .question-label { font-weight: 700; margin-bottom: 12px; display: block; color: #C2185B; }
+        .required { color: #E91E63; }
         .radio-group { display: flex; flex-direction: column; gap: 8px; }
         .radio-option { padding: 12px; border: 1px solid #FFCDD2; border-radius: 12px; background: #FFF8FB; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .radio-option.selected { border-color: #E91E63; background: #FCE4EC; color: #E91E63; font-weight: bold; }
         .text-input { width: 100%; border: 1px solid #FFCDD2; border-radius: 10px; padding: 12px; margin-top: 5px; font-family: inherit; }
-        .submit-btn { background: #E91E63; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3); margin-top: 20px; }
+        .submit-btn { background: #E91E63; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(233,30,99,0.3); margin-top: 10px; margin-bottom: 30px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="welcome-card">
-        <h1 style="color: #E91E63;">🐓 Il Gallo di Rimini</h1>
-        <p>Tutte le domande del questionario originale</p>
+        <div style="font-size: 40px;">🐓 💌 🌹</div>
+        <h1 style="color: #E91E63; margin: 10px 0;">Il Gallo di Rimini</h1>
+        <p style="font-size: 14px; margin-bottom: 10px;">Questo questionario è completamente anonimo e confidenziale. Il tuo feedback lo aiuterà a migliorare la sua (e la tua) esperienza amorosa. 💖</p>
+        <p style="font-weight: bold; font-size: 13px;">🔒 Risposta 100% anonima</p>
     </div>
 
     <form id="galloForm">
         <div class="section">
-            <div class="section-header">📍 Comportamento e Puntualità</div>
+            <div class="section-header">💬 La base</div>
+            <div class="instr">* Tutte le domande di questa sezione sono obbligatorie</div>
             
-            <div class="question-card">
-                <span class="question-label">1. Puntualità:</span>
-                <div class="radio-group" data-group="q1">
-                    <div class="radio-option" onclick="selectOption(this, 'q1')">In anticipo</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q1')">Spaccato al minuto</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q1')">In leggero ritardo (5-10 min)</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q1')">In forte ritardo (>20 min)</div>
+            <div class="question-card" data-req="true">
+                <span class="question-label">Puntualità <span class="required">*</span></span>
+                <div class="radio-group" data-group="puntualita">
+                    <div class="radio-option" onclick="selectOption(this, 'puntualita')">In anticipo</div>
+                    <div class="radio-option" onclick="selectOption(this, 'puntualita')">Puntuale</div>
+                    <div class="radio-option" onclick="selectOption(this, 'puntualita')">Arriva quando gli fa comodo</div>
+                    <div class="radio-option" onclick="selectOption(this, 'puntualita')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Capacità di ascolto <span class="required">*</span></span>
+                <div class="radio-group" data-group="ascolto">
+                    <div class="radio-option" onclick="selectOption(this, 'ascolto')">Finge interesse</div>
+                    <div class="radio-option" onclick="selectOption(this, 'ascolto')">Ricorda a mala pena il mio nome</div>
+                    <div class="radio-option" onclick="selectOption(this, 'ascolto')">È interessato</div>
+                    <div class="radio-option" onclick="selectOption(this, 'ascolto')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Capacità di ricordare dettagli personali <span class="required">*</span></span>
+                <div class="radio-group" data-group="memoria">
+                    <div class="radio-option" onclick="selectOption(this, 'memoria')">Nulla</div>
+                    <div class="radio-option" onclick="selectOption(this, 'memoria')">Media</div>
+                    <div class="radio-option" onclick="selectOption(this, 'memoria')">Alta</div>
+                    <div class="radio-option" onclick="selectOption(this, 'memoria')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Qualità dell'approccio <span class="required">*</span></span>
+                <div class="radio-group" data-group="approccio">
+                    <div class="radio-option" onclick="selectOption(this, 'approccio')">Basso</div>
+                    <div class="radio-option" onclick="selectOption(this, 'approccio')">Medio</div>
+                    <div class="radio-option" onclick="selectOption(this, 'approccio')">Alto</div>
+                    <div class="radio-option" onclick="selectOption(this, 'approccio')">Preferisco non rispondere</div>
                 </div>
             </div>
 
             <div class="question-card">
-                <span class="question-label">2. Capacità di ascolto:</span>
-                <div class="radio-group" data-group="q2">
-                    <div class="radio-option" onclick="selectOption(this, 'q2')">È un ottimo ascoltatore</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q2')">Ascolta ma è distratto</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q2')">Parla solo lui</div>
+                <span class="question-label">Peggiore difetto da segnalare (facoltativo)</span>
+                <textarea class="text-input" id="difetto" rows="2"></textarea>
+            </div>
+
+            <div class="question-card">
+                <span class="question-label">Punto di forza (facoltativo)</span>
+                <textarea class="text-input" id="forza" rows="2"></textarea>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Vorresti un altro appuntamento <span class="required">*</span></span>
+                <div class="radio-group" data-group="bis">
+                    <div class="radio-option" onclick="selectOption(this, 'bis')">Sì</div>
+                    <div class="radio-option" onclick="selectOption(this, 'bis')">No</div>
+                    <div class="radio-option" onclick="selectOption(this, 'bis')">Preferisco non rispondere</div>
                 </div>
             </div>
         </div>
 
         <div class="section">
-            <div class="section-header">🔥 Prestazione e Feeling</div>
+            <div class="section-header">🔥 Prestazione tecnica</div>
+            <div class="instr">* Tutte le domande di questa sezione sono obbligatorie</div>
 
-            <div class="question-card">
-                <span class="question-label">3. Valutazione complessiva della serata:</span>
-                <div class="radio-group" data-group="q3">
-                    <div class="radio-option" onclick="selectOption(this, 'q3')">Da dimenticare ⭐️</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q3')">Sufficiente ⭐️⭐️</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q3')">Buona ⭐️⭐️⭐️</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q3')">Sorprendente ⭐️⭐️⭐️⭐️</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q3')">Leggendaria ⭐️⭐️⭐️⭐️⭐️</div>
+            <div class="question-card" data-req="true">
+                <span class="question-label">Durata <span class="required">*</span></span>
+                <div class="radio-group" data-group="durata">
+                    <div class="radio-option" onclick="selectOption(this, 'durata')">Non è arrivato alla fine dei preliminari</div>
+                    <div class="radio-option" onclick="selectOption(this, 'durata')">Sembrava un razzo, peccato sia durato poco</div>
+                    <div class="radio-option" onclick="selectOption(this, 'durata')">Nella media</div>
+                    <div class="radio-option" onclick="selectOption(this, 'durata')">TOP!!!</div>
+                    <div class="radio-option" onclick="selectOption(this, 'durata')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Capacità di trovare i punti giusti <span class="required">*</span></span>
+                <div class="radio-group" data-group="gps">
+                    <div class="radio-option" onclick="selectOption(this, 'gps')">Cieco totale, ha bisogno di un GPS</div>
+                    <div class="radio-option" onclick="selectOption(this, 'gps')">Discreto, ma confonde il clitoride con il telecomando della TV</div>
+                    <div class="radio-option" onclick="selectOption(this, 'gps')">Ottimo navigatore</div>
+                    <div class="radio-option" onclick="selectOption(this, 'gps')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Gestione dei preliminari <span class="required">*</span></span>
+                <div class="radio-group" data-group="preliminari">
+                    <div class="radio-option" onclick="selectOption(this, 'preliminari')">Li salta del tutto</div>
+                    <div class="radio-option" onclick="selectOption(this, 'preliminari')">Ci prova, ma dopo 2 minuti chiede di passare all'azione</div>
+                    <div class="radio-option" onclick="selectOption(this, 'preliminari')">Nella media</div>
+                    <div class="radio-option" onclick="selectOption(this, 'preliminari')">Il maestro</div>
+                    <div class="radio-option" onclick="selectOption(this, 'preliminari')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Originalità delle posizioni <span class="required">*</span></span>
+                <div class="radio-group" data-group="posizioni">
+                    <div class="radio-option" onclick="selectOption(this, 'posizioni')">Solo missionario</div>
+                    <div class="radio-option" onclick="selectOption(this, 'posizioni')">Dice di saperne tante, ma poi fa sempre le stesse due</div>
+                    <div class="radio-option" onclick="selectOption(this, 'posizioni')">GURU del kamasutra</div>
+                    <div class="radio-option" onclick="selectOption(this, 'posizioni')">Per fortuna c'ero io</div>
+                    <div class="radio-option" onclick="selectOption(this, 'posizioni')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Capacità di far venire la partner <span class="required">*</span></span>
+                <div class="radio-group" data-group="orgasmo">
+                    <div class="radio-option" onclick="selectOption(this, 'orgasmo')">Mai venuta</div>
+                    <div class="radio-option" onclick="selectOption(this, 'orgasmo')">C'era vicino</div>
+                    <div class="radio-option" onclick="selectOption(this, 'orgasmo')">Successo</div>
+                    <div class="radio-option" onclick="selectOption(this, 'orgasmo')">Multi-Successo</div>
+                    <div class="radio-option" onclick="selectOption(this, 'orgasmo')">Preferisco non rispondere</div>
+                </div>
+            </div>
+
+            <div class="question-card" data-req="true">
+                <span class="question-label">Valutazione complessiva della performance <span class="required">*</span></span>
+                <div class="radio-group" data-group="voto_finale">
+                    <div class="radio-option" onclick="selectOption(this, 'voto_finale')">Da dimenticare</div>
+                    <div class="radio-option" onclick="selectOption(this, 'voto_finale')">Sufficiente</div>
+                    <div class="radio-option" onclick="selectOption(this, 'voto_finale')">Buono</div>
+                    <div class="radio-option" onclick="selectOption(this, 'voto_finale')">Sorprendente</div>
+                    <div class="radio-option" onclick="selectOption(this, 'voto_finale')">Preferisco non rispondere</div>
                 </div>
             </div>
 
             <div class="question-card">
-                <span class="question-label">4. Livello di simpatia:</span>
-                <div class="radio-group" data-group="q4">
-                    <div class="radio-option" onclick="selectOption(this, 'q4')">Molto simpatico</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q4')">Nella media</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q4')">Un po' pesante</div>
-                </div>
-            </div>
-
-            <div class="question-card">
-                <span class="question-label">5. Capacità di mettere a proprio agio:</span>
-                <div class="radio-group" data-group="q5">
-                    <div class="radio-option" onclick="selectOption(this, 'q5')">Mi sono sentita subito a casa</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q5')">Abbastanza bene</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q5')">Un po' di tensione iniziale</div>
-                </div>
+                <span class="question-label">Suggerimenti lato intimo (facoltativo)</span>
+                <textarea class="text-input" id="sugg_intimo" rows="3"></textarea>
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-header">🔚 Conclusioni</div>
-
-            <div class="question-card">
-                <span class="question-label">6. Lo consiglieresti a un'amica?</span>
-                <div class="radio-group" data-group="q6">
-                    <div class="radio-option" onclick="selectOption(this, 'q6')">Assolutamente sì</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q6')">Forse</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q6')">No, me lo tengo per me</div>
-                    <div class="radio-option" onclick="selectOption(this, 'q6')">Assolutamente no</div>
-                </div>
-            </div>
-
-            <div class="question-card">
-                <span class="question-label">7. Suggerimenti o commenti liberi:</span>
-                <textarea class="text-input" id="comments" rows="3" placeholder="Scrivi qui..."></textarea>
-            </div>
-        </div>
-
-        <button type="button" class="submit-btn" onclick="submitSurvey()">📤 INVIA RISPOSTE</button>
+        <button type="button" class="submit-btn" onclick="submitSurvey()">📤 INVIA QUESTIONARIO</button>
     </form>
 </div>
 
@@ -119,19 +187,20 @@
     }
 
     function submitSurvey() {
-        // Controllo se ha risposto a tutto
-        const questionsCount = 6; 
-        if (Object.keys(responses).length < questionsCount) {
-            alert("Per favore, rispondi a tutte le domande prima di inviare!");
-            return;
+        const requiredGroups = ['puntualita', 'ascolto', 'memoria', 'approccio', 'bis', 'durata', 'gps', 'preliminari', 'posizioni', 'orgasmo', 'voto_finale'];
+        
+        for (let group of requiredGroups) {
+            if (!responses[group]) {
+                alert("Manca una risposta obbligatoria!");
+                return;
+            }
         }
 
-        // AGGIUNTA: Salvataggio locale per i test
-        const savedData = JSON.parse(localStorage.getItem('gallo_results') || '[]');
-        savedData.push(responses);
-        localStorage.setItem('gallo_results', JSON.stringify(savedData));
+        const allData = JSON.parse(localStorage.getItem('gallo_results_v2') || '[]');
+        allData.push(responses);
+        localStorage.setItem('gallo_results_v2', JSON.stringify(allData));
 
-        alert("Grazie! Risposte inviate con successo.");
+        alert("Grazie! Questionario inviato al Gallo.");
         window.location.href = "index.html";
     }
 </script>
