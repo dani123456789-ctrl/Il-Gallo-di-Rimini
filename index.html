@@ -24,14 +24,13 @@
             width: 90%;
         }
         
-        /* STILE DEL LOGO */
         .logo-container {
             margin-bottom: 20px;
         }
         .logo-img {
-            width: 120px; /* Puoi regolare la grandezza qui */
+            width: 120px;
             height: 120px;
-            border-radius: 50%; /* Lo rende tondo */
+            border-radius: 50%;
             object-fit: cover;
             border: 3px solid #E91E63;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -49,10 +48,52 @@
             margin-bottom: 15px; 
             font-weight: bold; 
             transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 16px;
         }
         .btn:hover { background: #C2185B; transform: translateY(-2px); }
         .btn-secondary { background: #fce4ec; color: #E91E63; border: 1px solid #E91E63; }
         .btn-secondary:hover { background: #f8bbd0; }
+
+        /* STILI PER IL POPUP (MODAL) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal-text {
+            color: #E91E63;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .close-btn {
+            background: #E91E63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -67,8 +108,33 @@
     <h1>Il Gallo di Rimini</h1>
     
     <a href="survey.html" class="btn">Inizia il Questionario</a>
-    <a href="dashboard.html" class="btn btn-secondary">Guarda i Risultati</a>
+    <button onclick="showPopup()" class="btn btn-secondary">Guarda i Risultati</button>
 </div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p class="modal-text">Ti piacerebbe, eh?<br><br>Ne parliamo al prossimo appuntamento! 😉🌹</p>
+        <button class="close-btn" onclick="closePopup()">Chiudi</button>
+    </div>
+</div>
+
+<script>
+    function showPopup() {
+        document.getElementById("myModal").style.display = "flex";
+    }
+
+    function closePopup() {
+        document.getElementById("myModal").style.display = "none";
+    }
+
+    // Chiude il popup se si clicca fuori dal contenuto
+    window.onclick = function(event) {
+        let modal = document.getElementById("myModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 </body>
 </html>
