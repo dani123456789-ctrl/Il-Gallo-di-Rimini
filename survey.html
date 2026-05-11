@@ -20,7 +20,8 @@
         .radio-option { padding: 12px; border: 1px solid #FFCDD2; border-radius: 12px; background: #FFF8FB; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .radio-option.selected { border-color: #E91E63; background: #FCE4EC; color: #E91E63; font-weight: bold; }
         .text-input { width: 100%; border: 1px solid #FFCDD2; border-radius: 10px; padding: 12px; margin-top: 5px; font-family: inherit; resize: vertical; }
-        .submit-btn { background: #E91E63; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(233,30,99,0.3); margin-top: 10px; margin-bottom: 30px; }
+        .submit-btn { background: #E91E63; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(233,30,99,0.3); margin-top: 10px; margin-bottom: 30px; transition: 0.3s; }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
     </style>
 </head>
 <body>
@@ -74,11 +75,11 @@
             </div>
 
             <div class="question-card"><span class="question-label">Peggiore difetto (facoltativo)</span>
-                <textarea class="text-input" id="difetto" rows="2"></textarea>
+                <textarea class="text-input" id="difetto" rows="2" placeholder="Cosa non ti è piaciuto?"></textarea>
             </div>
 
             <div class="question-card"><span class="question-label">Punto di forza (facoltativo)</span>
-                <textarea class="text-input" id="forza" rows="2"></textarea>
+                <textarea class="text-input" id="forza" rows="2" placeholder="In cosa eccelle?"></textarea>
             </div>
 
             <div class="question-card"><span class="question-label">Vorresti un altro appuntamento <span class="required">*</span></span>
@@ -107,7 +108,7 @@
             <div class="question-card"><span class="question-label">Capacità di trovare i punti giusti <span class="required">*</span></span>
                 <div class="radio-group" data-group="gps">
                     <div class="radio-option" onclick="selectOption(this, 'gps')">Cieco totale, ha bisogno di un GPS</div>
-                    <div class="radio-option" onclick="selectOption(this, 'gps')">Discreto, ma confonde il clitoride con il telecomando della TV</div>
+                    <div class="radio-option" onclick="selectOption(this, 'gps')">Discreto, ma confonde il clitoride con il telecomando</div>
                     <div class="radio-option" onclick="selectOption(this, 'gps')">Ottimo navigatore</div>
                     <div class="radio-option" onclick="selectOption(this, 'gps')">Preferisco non rispondere</div>
                 </div>
@@ -154,16 +155,17 @@
             </div>
 
             <div class="question-card"><span class="question-label">Suggerimenti intimi (facoltativo)</span>
-                <textarea class="text-input" id="sugg_intimo" rows="3"></textarea>
+                <textarea class="text-input" id="sugg_intimo" rows="3" placeholder="Come può migliorare?"></textarea>
             </div>
         </div>
 
-        <button type="button" class="submit-btn" onclick="submitSurvey()">📤 INVIA QUESTIONARIO</button>
+        <button type="button" id="submitBtn" class="submit-btn" onclick="submitSurvey()">📤 INVIA QUESTIONARIO</button>
     </form>
 </div>
 
 <script>
     let responses = {};
+
     function selectOption(el, group) {
         document.querySelectorAll(`[data-group="${group}"] .radio-option`).forEach(opt => opt.classList.remove('selected'));
         el.classList.add('selected');
@@ -172,18 +174,39 @@
 
     function submitSurvey() {
         const required = ['puntualita', 'ascolto', 'memoria', 'approccio', 'bis', 'durata', 'gps', 'preliminari', 'posizioni', 'orgasmo', 'voto_finale'];
-        for (let g of required) { if (!responses[g]) { alert("Compila tutti i campi obbligatori!"); return; } }
+        for (let g of required) { 
+            if (!responses[g]) { 
+                alert("Per favore, rispondi a tutte le domande obbligatorie (*)"); 
+                return; 
+            } 
+        }
         
-        responses['difetto'] = document.getElementById('difetto').value;
-        responses['forza'] = document.getElementById('forza').value;
-        responses['sugg_intimo'] = document.getElementById('sugg_intimo').value;
+        responses['difetto'] = document.getElementById('difetto').value || "";
+        responses['forza'] = document.getElementById('forza').value || "";
+        responses['sugg_intimo'] = document.getElementById('sugg_intimo').value || "";
 
-        const allData = JSON.parse(localStorage.getItem('gallo_results_v2') || '[]');
-        allData.push(responses);
-        localStorage.setItem('gallo_results_v2', JSON.stringify(allData));
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Invio in corso...";
+        btn.disabled = true;
 
-        alert("Inviato!");
-        window.location.href = "index.html";
+        // TUO LINK GOOGLE SCRIPT AGGIORNATO
+        const url = "https://script.google.com/macros/s/AKfycbxCmlMQlpUopt9BLvxZR9K6-yGbhKB0bI_g17IilfMqQX1lfu9B2a0xxVvpBzlVaL97mg/exec"; 
+
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors', // Fondamentale per i link di Google Script
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(responses)
+        }).then(() => {
+            alert("Feedback inviato con successo! Grazie per la tua sincerità.");
+            window.location.href = "index.html";
+        }).catch(err => {
+            console.error(err);
+            alert("Si è verificato un errore durante l'invio. Riprova tra poco.");
+            btn.disabled = false;
+            btn.innerText = "📤 INVIA QUESTIONARIO";
+        });
     }
 </script>
 </body>
